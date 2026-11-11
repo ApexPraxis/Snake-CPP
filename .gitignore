@@ -1,0 +1,27 @@
+
+# Compiled executables
+*.exe
+*.out
+
+# Object files
+*.o
+*.obj
+
+# Debug files
+*.pdb
+*.ilk
+*.idb
+
+# Build directories
+build/
+bin/
+Debug/
+Release/
+
+# VS Code workspace settings (keep tasks.json if needed)
+.vscode/*
+!.vscode/tasks.json
+
+# Temporary files
+*.tmp
+*.log
