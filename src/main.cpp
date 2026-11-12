@@ -1,16 +1,22 @@
 #include<iostream>
-#include "raylib.h"
+#include<raylib.h>
 
-int main() {
-    InitWindow(800, 600, "Snake CPP");
+using namespace std;
 
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(BLACK);
-        DrawText("Raylib is working!", 250, 280, 30, GREEN);
-        EndDrawing();
-    }
+int main(){
+ cout << "Starting the game..." << endl;
+ InitWindow(750,750,"Retro Snake");
+SetTargetFPS(60);
 
-    CloseWindow();
+
+ while(WindowShouldClose() == false)
+ {
+BeginDrawing();
+
+EndDrawing();
+
+ }
+
+ CloseWindow();
     return 0;
 }
