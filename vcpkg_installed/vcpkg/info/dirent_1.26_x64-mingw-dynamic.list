@@ -1,5 +1,0 @@
-x64-mingw-dynamic/
-x64-mingw-dynamic/share/
-x64-mingw-dynamic/share/dirent/
-x64-mingw-dynamic/share/dirent/vcpkg.spdx.json
-x64-mingw-dynamic/share/dirent/vcpkg_abi_info.txt
