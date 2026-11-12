@@ -1,6 +1,6 @@
 
 {
-    "name": "snake-cpp",
+    "name": "Snake-CPP",
     "version-string": "1.0.0",
     "dependencies": [
         "raylib"
