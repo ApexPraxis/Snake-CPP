@@ -3,23 +3,24 @@
 
 using namespace std;
 
-Color green = { 173, 204, 96, 255 };
-Color DarkGreen = { 43, 51, 24, 255 };
+Color green = {173, 204, 96, 255};
+Color DarkGreen = {43, 51, 24, 255};
 
 int cellSize = 30;
 int cellCount = 25;
 
-class Food{
-    
-    public:
-Vector2 position = {5,6};
+class Food
+{
 
-void Draw(){
+public:
+    Vector2 position = {5, 6};
 
-    DrawRectangle(position.x * cellSize , position.y * cellSize, cellSize , cellSize, DarkGreen);
-}
+    void Draw()
+    {
+
+        DrawRectangle(position.x * cellSize, position.y * cellSize, cellSize, cellSize, DarkGreen);
+    }
 };
-
 
 int main()
 {
@@ -30,7 +31,7 @@ int main()
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
-        //drawing 
+        // drawing
         ClearBackground(green);
 
         EndDrawing();
