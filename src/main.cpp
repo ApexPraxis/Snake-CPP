@@ -27,13 +27,14 @@ int main()
     cout << "Starting the game..." << endl;
     InitWindow(cellSize * cellCount, cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
+    Food food = Food();
 
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
         // drawing
         ClearBackground(green);
-
+        food.Draw();
         EndDrawing();
     }
 
