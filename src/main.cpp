@@ -21,6 +21,11 @@ public:
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
     }
+
+    ~Food()
+    {
+        UnloadTexture(texture);
+    }
     void Draw()
     {
 
