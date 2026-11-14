@@ -1,7 +1,6 @@
 #include <iostream>
 #include <raylib.h>
-#include<deque>
-
+#include <deque>
 
 using namespace std;
 
@@ -11,21 +10,21 @@ Color DarkGreen = {43, 51, 24, 255};
 int cellSize = 30;
 int cellCount = 25;
 
-class Snake{
+class Snake
+{
 public:
-deque<Vector2> body = {Vector2{6,9}, Vector2{5,9}, Vector2{4,9}};
+    deque<Vector2> body = {Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9}};
 
-void Draw(){
-for(int i = 0; i < body.size(); i++){
-    int x = body[i].x ;
-    int y = body[i].y ;
-    DrawRectangle(x * cellSize, y * cellSize, cellSize, cellSize, DarkGreen);
-
-}
-}
+    void Draw()
+    {
+        for (int i = 0; i < body.size(); i++)
+        {
+            int x = body[i].x;
+            int y = body[i].y;
+            DrawRectangle(x * cellSize, y * cellSize, cellSize, cellSize, DarkGreen);
+        }
+    }
 };
-
-
 
 class Food
 {
@@ -65,7 +64,7 @@ int main()
     InitWindow(cellSize * cellCount, cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
     Food food = Food();
-Snake snake = Snake();
+    Snake snake = Snake();
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
@@ -74,7 +73,6 @@ Snake snake = Snake();
         food.Draw();
         snake.Draw();
         EndDrawing();
-
     }
 
     CloseWindow();
