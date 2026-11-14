@@ -17,7 +17,7 @@ public:
 
     void Draw()
     {
-        for (int i = 0; i < body.size(); i++)
+        for (unsigned int i = 0; i < body.size(); i++)
         {
             int x = body[i].x;
             int y = body[i].y;
