@@ -17,7 +17,7 @@ public:
     Texture2D texture;
     Food()
     {
-        Image image = LoadImage("Graphics/food.png");
+        Image image = LoadImage("food.png");
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
     }
