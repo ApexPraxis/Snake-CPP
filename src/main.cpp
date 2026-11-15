@@ -13,13 +13,15 @@ int cellCount = 25;
 
 double lastUpdateTime = 0;
 
-bool eventTriggered(double interval){
-double currentTime = GetTime();
-if (currentTime - lastUpdateTime >= interval) {
-    lastUpdateTime = currentTime;
-    return true;
-}
-return false;
+bool eventTriggered(double interval)
+{
+    double currentTime = GetTime();
+    if (currentTime - lastUpdateTime >= interval)
+    {
+        lastUpdateTime = currentTime;
+        return true;
+    }
+    return false;
 }
 
 class Snake
@@ -89,7 +91,8 @@ int main()
     {
         BeginDrawing();
 
-        if(eventTriggered(0.2)){
+        if (eventTriggered(0.2))
+        {
             snake.Update();
         }
 
