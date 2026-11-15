@@ -21,7 +21,7 @@ public:
         {
             float x = body[i].x;
             float y = body[i].y;
-            Rectangle segment = Rectangle{x * cellSize, y * cellSize, cellSize, cellSize};
+            Rectangle segment = Rectangle{x * cellSize, y * cellSize, float(cellSize), float(cellSize)};
             DrawRectangleRounded(segment, 0.5, 6, DarkGreen);
         }
     }
