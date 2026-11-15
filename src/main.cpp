@@ -83,7 +83,7 @@ public:
     Texture2D texture;
     Food(deque<Vector2> snakeBody)
     {
-        Image image = LoadImage("food.png");
+        Image image = LoadImage("Graphics/food.png");
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
         position = GenerateRandomPos(snakeBody);
