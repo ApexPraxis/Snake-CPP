@@ -66,6 +66,11 @@ public:
             body.pop_back();
         }
     }
+
+    void Reset(){
+body = {Vector2{6,9}, Vector2{5,9}, Vector2{4,9}};
+direction = {1,0};
+    }
 };
 
 class Food
@@ -115,6 +120,7 @@ class Game
 public:
     Snake snake = Snake();
     Food food = Food(snake.body);
+    bool running = true;
 
     void Draw()
     {
@@ -124,9 +130,11 @@ public:
 
     void Update()
     {
-        snake.Update();
-        CheckCollisionWithFood();
-        CheckCollisionWithEdge();
+        if(running){ 
+            snake.Update();
+            CheckCollisionWithFood();
+            CheckCollisionWithEdge();
+        }
     }
 
     void CheckCollisionWithFood()
@@ -152,7 +160,9 @@ public:
 
     void GameOver()
     {
-        cout << "Game Over!" << endl;
+        snake.Reset();
+        food.position = food.GenerateRandomPos(snake.body);
+        running = false;
     }
 };
 
