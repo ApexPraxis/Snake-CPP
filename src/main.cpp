@@ -183,7 +183,7 @@ public:
 int main()
 {
     cout << "Starting the game..." << endl;
-    InitWindow(2*offset + cellSize * cellCount, 2*offset + cellSize * cellCount, "Retro Snake");
+    InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
 
     Game game = Game();
@@ -219,7 +219,7 @@ int main()
 
         // drawing
         ClearBackground(green);
-        DrawRectangleLinesEx(Rectangle{float(offset) - 5, float(offset) - 5, float(cellSize*cellCount+10), float(cellSize*cellCount+10) }, 5, DarkGreen);
+        DrawRectangleLinesEx(Rectangle{float(offset) - 5, float(offset) - 5, float(cellSize * cellCount + 10), float(cellSize * cellCount + 10)}, 5, DarkGreen);
         game.Draw();
         EndDrawing();
     }
