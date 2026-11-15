@@ -28,9 +28,10 @@ public:
         }
     }
 
-    void Update(){
-body.pop_back();
-body.push_front(Vector2Add(body[0], direction));
+    void Update()
+    {
+        body.pop_back();
+        body.push_front(Vector2Add(body[0], direction));
     }
 };
 
