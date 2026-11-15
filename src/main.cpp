@@ -11,6 +11,17 @@ Color DarkGreen = {43, 51, 24, 255};
 int cellSize = 30;
 int cellCount = 25;
 
+double lastUpdateTime = 0;
+
+bool eventTriggered(double interval){
+double currentTime = GetTime();
+if (currentTime - lastUpdateTime >= interval) {
+    lastUpdateTime = currentTime;
+    return true;
+}
+return false;
+}
+
 class Snake
 {
 public:
@@ -78,7 +89,9 @@ int main()
     {
         BeginDrawing();
 
-        snake.Update();
+        if(eventTriggered(0.2)){
+            snake.Update();
+        }
 
         // drawing
         ClearBackground(green);
