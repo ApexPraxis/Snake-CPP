@@ -136,6 +136,7 @@ public:
             snake.Update();
             CheckCollisionWithFood();
             CheckCollisionWithEdge();
+            CheckCollisionWithSelf();
         }
     }
 
@@ -166,6 +167,16 @@ public:
         food.position = food.GenerateRandomPos(snake.body);
         running = false;
     }
+
+    void CheckCollisionWithSelf()
+    {
+        deque<Vector2> headlessBody = snake.body;
+        headlessBody.pop_front();
+        if (ElementInDeque(snake.body[0], headlessBody))
+        {
+            GameOver();
+        }
+    }
 };
 
 int main()
@@ -187,18 +198,22 @@ int main()
         if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1)
         {
             game.snake.direction = {0, -1};
+            game.running = true;
         }
         else if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1)
         {
             game.snake.direction = {0, 1};
+            game.running = true;
         }
         else if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1)
         {
             game.snake.direction = {-1, 0};
+            game.running = true;
         }
         else if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1)
         {
             game.snake.direction = {1, 0};
+            game.running = true;
         }
 
         // drawing
