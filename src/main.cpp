@@ -124,6 +124,15 @@ public:
     Food food = Food(snake.body);
     bool running = true;
     int score = 0;
+    Sound eatSound;
+    Sound wallSound;
+
+    Game()
+    {
+        InitAudioDevice();
+        eatSound = LoadSound("Sounds/eat.mp3");
+        wallSound = LoadSound("Sounds/wall.mp3");
+    }
 
     void Draw()
     {
