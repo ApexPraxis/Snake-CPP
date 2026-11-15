@@ -96,7 +96,7 @@ int main()
             snake.Update();
         }
 
-        if(IsKeyPressed(KEY_UP) && snake.direction.y != 1)
+        if (IsKeyPressed(KEY_UP) && snake.direction.y != 1)
         {
             snake.direction = {0, -1};
         }
