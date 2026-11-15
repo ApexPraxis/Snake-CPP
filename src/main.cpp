@@ -102,7 +102,7 @@ public:
     {
         if (Vector2Equals(snake.body[0], food.position))
         {
-            cout << "Food eaten!" << endl;
+         food.position = food.GenerateRandomPos();
         }
     }
 };
