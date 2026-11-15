@@ -23,7 +23,6 @@ bool ElementInDeque(Vector2 element, deque<Vector2> deque)
         }
     }
     return false;
-
 }
 
 bool eventTriggered(double interval)
@@ -85,7 +84,8 @@ public:
         DrawTexture(texture, position.x * cellSize, position.y * cellSize, WHITE);
     }
 
-    Vector2 GenerateRandomCell(){
+    Vector2 GenerateRandomCell()
+    {
         float x = GetRandomValue(0, cellCount - 1);
         float y = GetRandomValue(0, cellCount - 1);
         return Vector2{x, y};
@@ -124,7 +124,7 @@ public:
     {
         if (Vector2Equals(snake.body[0], food.position))
         {
-         food.position = food.GenerateRandomPos(snake.body);
+            food.position = food.GenerateRandomPos(snake.body);
         }
     }
 };
