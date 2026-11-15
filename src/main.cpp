@@ -148,7 +148,7 @@ public:
         {
             food.position = food.GenerateRandomPos(snake.body);
             snake.addSegment = true;
-            score++;  
+            score++;
         }
     }
 
@@ -224,7 +224,7 @@ int main()
         ClearBackground(green);
         DrawRectangleLinesEx(Rectangle{float(offset) - 5, float(offset) - 5, float(cellSize * cellCount + 10), float(cellSize * cellCount + 10)}, 5, DarkGreen);
         DrawText("Retro Snake", offset - 5, 20, 40, DarkGreen);
-        DrawText(TextFormat("Score: %i", game.score), offset - 5, offset + cellSize * cellCount+10, 40, DarkGreen);
+        DrawText(TextFormat("Score: %i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, DarkGreen);
         game.Draw();
         EndDrawing();
     }
