@@ -208,26 +208,26 @@ int main()
             game.Update();
         }
 
-        if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1)
-        {
-            game.snake.direction = {0, -1};
-            game.running = true;
-        }
-        else if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1)
-        {
-            game.snake.direction = {0, 1};
-            game.running = true;
-        }
-        else if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1)
-        {
-            game.snake.direction = {-1, 0};
-            game.running = true;
-        }
-        else if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1)
-        {
-            game.snake.direction = {1, 0};
-            game.running = true;
-        }
+        if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && game.snake.direction.y != 1)
+{
+    game.snake.direction = {0, -1};
+    game.running = true;
+}
+else if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && game.snake.direction.y != -1)
+{
+    game.snake.direction = {0, 1};
+    game.running = true;
+}
+else if ((IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) && game.snake.direction.x != 1)
+{
+    game.snake.direction = {-1, 0};
+    game.running = true;
+}
+else if ((IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) && game.snake.direction.x != -1)
+{
+    game.snake.direction = {1, 0};
+    game.running = true;
+}
 
         // drawing
         ClearBackground(green);
