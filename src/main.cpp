@@ -95,7 +95,14 @@ public:
     void Update()
     {
         snake.Update();
+        CheckCollisionWithFood();
     }
+
+    void CheckCollisionWithFood(){
+if(Vector2Equals(snake.body[0], food.position)){
+    cout << "Food eaten!" << endl;
+    }
+}
 };
 
 int main()
