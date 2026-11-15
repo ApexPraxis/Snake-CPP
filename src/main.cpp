@@ -144,15 +144,15 @@ public:
         {
             GameOver();
         }
-        if(snake.body[0].y == cellCount || snake.body[0].y == -1)
+        if (snake.body[0].y == cellCount || snake.body[0].y == -1)
         {
             GameOver();
-        }   
+        }
     }
 
-    void GameOver(){
+    void GameOver()
+    {
         cout << "Game Over!" << endl;
-
     }
 };
 
