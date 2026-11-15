@@ -80,19 +80,22 @@ public:
     }
 };
 
-class Game{
-public: 
-Snake snake = Snake();
-Food food = Food();
+class Game
+{
+public:
+    Snake snake = Snake();
+    Food food = Food();
 
-void Draw(){
-food.Draw();
-snake.Draw();
-}
+    void Draw()
+    {
+        food.Draw();
+        snake.Draw();
+    }
 
-void Update(){
-    snake.Update();
-}
+    void Update()
+    {
+        snake.Update();
+    }
 };
 
 int main()
@@ -100,7 +103,7 @@ int main()
     cout << "Starting the game..." << endl;
     InitWindow(cellSize * cellCount, cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
-    
+
     Game game = Game();
     while (WindowShouldClose() == false)
     {
