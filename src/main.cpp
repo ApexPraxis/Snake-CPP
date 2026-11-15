@@ -134,6 +134,12 @@ public:
         wallSound = LoadSound("Sounds/wall.mp3");
     }
 
+    ~Game()
+    {
+        UnloadSound(eatSound);
+        UnloadSound(wallSound);
+        CloseAudioDevice();
+    }
     void Draw()
     {
         food.Draw();
@@ -158,6 +164,7 @@ public:
             food.position = food.GenerateRandomPos(snake.body);
             snake.addSegment = true;
             score++;
+            PlaySound(eatSound);
         }
     }
 
@@ -179,6 +186,7 @@ public:
         food.position = food.GenerateRandomPos(snake.body);
         running = false;
         score = 0;
+        PlaySound(wallSound);
     }
 
     void CheckCollisionWithSelf()
