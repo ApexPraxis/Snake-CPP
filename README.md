@@ -99,12 +99,10 @@ Snake-CPP/
 ## 🔮 Future Improvements
 
 - [ ] Separate classes into individual header and source files
-- [ ] Add a main menu and game-over screen
-- [ ] Implement a persistent high-score system
-- [ ] Add difficulty levels
 - [ ] Improve animations and visual effects
 - [ ] Introduce CMake support
 - [ ] Add automated build testing with GitHub Actions
+- [ ] Add a gameplay screenshot or GIF to the README
 
 ## 👨‍💻 Author
 
