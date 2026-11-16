@@ -6,7 +6,7 @@ A classic Snake game built using **C++17** and **Raylib**, featuring object-orie
 
 Snake-CPP is a recreation of the classic Snake arcade game. Control the snake, collect food, increase your score, and avoid colliding with walls or yourself.
 
-This project was created as part of my journey into C++ programming, object-oriented programming, and game development.
+This project was created as part of my journey into C++ programming, object-oriented programming, and game development using raylib..
 
 ## ✨ Features
 
