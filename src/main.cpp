@@ -1,27 +1,26 @@
+#include <iostream>
 #include <raylib.h>
-#include <raymath.h>
-#include <algorithm>
 #include <deque>
-#include <fstream>
-#include <vector>
+#include <raymath.h>
+
+using namespace std;
 
 // ---------- Config ----------
-constexpr int cellSize = 30;
-constexpr int cellCount = 25;
-constexpr int offset = 75;
-constexpr int boardSize = cellSize * cellCount;
+Color green = {173, 204, 96, 255};
+Color DarkGreen = {43, 51, 24, 255};
 
-const Color lightGreen = {173, 204, 96, 255};
-const Color darkGreen = {43, 51, 24, 255};
+int cellSize = 30;
+int cellCount = 25;
+int offset = 75;
 
 double lastUpdateTime = 0;
 
 // ---------- Helpers ----------
-bool ElementInDeque(const Vector2 &element, const std::deque<Vector2> &body)
+bool ElementInDeque(const Vector2 &element, const deque<Vector2> &body)
 {
-    for (const Vector2 &segment : body)
+    for (unsigned int i = 0; i < body.size(); i++)
     {
-        if (Vector2Equals(segment, element))
+        if (Vector2Equals(body[i], element))
         {
             return true;
         }
@@ -43,33 +42,30 @@ bool eventTriggered(double interval)
 void DrawCentered(const char *text, int y, int fontSize)
 {
     int width = MeasureText(text, fontSize);
-    DrawText(text, (GetScreenWidth() - width) / 2, y, fontSize, darkGreen);
+    DrawText(text, (GetScreenWidth() - width) / 2, y, fontSize, DarkGreen);
 }
 
 // ---------- Snake ----------
 class Snake
 {
 public:
-    std::deque<Vector2> body;
-    Vector2 direction;              // direction the snake last moved in
-    std::deque<Vector2> inputQueue; // up to 2 buffered turns
+    deque<Vector2> body = {Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9}};
+    Vector2 direction = {1, 0};     // direction the snake last moved in
+    deque<Vector2> inputQueue;      // up to 2 buffered turns
     bool addSegment = false;
-
-    Snake() { Reset(); }
 
     void Draw()
     {
-        for (const Vector2 &segmentPos : body)
+        for (unsigned int i = 0; i < body.size(); i++)
         {
-            Rectangle segment = Rectangle{
-                offset + segmentPos.x * cellSize,
-                offset + segmentPos.y * cellSize,
-                float(cellSize), float(cellSize)};
-            DrawRectangleRounded(segment, 0.5f, 6, darkGreen);
+            float x = body[i].x;
+            float y = body[i].y;
+            Rectangle segment = Rectangle{offset + x * cellSize, offset + y * cellSize, float(cellSize), float(cellSize)};
+            DrawRectangleRounded(segment, 0.5, 6, DarkGreen);
         }
     }
 
-    // Buffers a turn, ignoring reversals and duplicates.
+    // Buffers a turn, ignoring reversals and duplicates
     void QueueDirection(Vector2 newDir)
     {
         Vector2 last = inputQueue.empty() ? direction : inputQueue.back();
@@ -91,7 +87,7 @@ public:
         }
 
         body.push_front(Vector2Add(body[0], direction));
-        if (addSegment)
+        if (addSegment == true)
         {
             addSegment = false;
         }
@@ -114,66 +110,60 @@ public:
 class Food
 {
 public:
-    Vector2 position = {0, 0};
+    Vector2 position;
     Texture2D texture;
 
-    Food(const std::deque<Vector2> &snakeBody)
+    Food(const deque<Vector2> &snakeBody)
     {
         texture = LoadTexture("Graphics/food.png");
         if (texture.id == 0)
         {
             TraceLog(LOG_WARNING, "Could not load Graphics/food.png (check working directory)");
         }
-        GenerateRandomPos(snakeBody);
+        position = GenerateRandomPos(snakeBody);
     }
 
-    ~Food() { UnloadTexture(texture); }
+    ~Food()
+    {
+        UnloadTexture(texture);
+    }
 
-    // A Food owns a texture, so copying it would unload the texture twice.
+    // Food owns a texture, so copying it would unload the texture twice
     Food(const Food &) = delete;
     Food &operator=(const Food &) = delete;
 
     void Draw()
     {
-        DrawTexture(texture,
-                    int(offset + position.x * cellSize),
-                    int(offset + position.y * cellSize),
-                    WHITE);
+        DrawTexture(texture, offset + position.x * cellSize, offset + position.y * cellSize, WHITE);
     }
 
-    // Picks a random free cell. Returns false if the board is full.
-    bool GenerateRandomPos(const std::deque<Vector2> &snakeBody)
+    Vector2 GenerateRandomCell()
     {
-        std::vector<Vector2> freeCells;
-        freeCells.reserve(cellCount * cellCount);
-        for (int y = 0; y < cellCount; y++)
+        float x = GetRandomValue(0, cellCount - 1);
+        float y = GetRandomValue(0, cellCount - 1);
+        return Vector2{x, y};
+    }
+
+    // Only call this when the board is not full (Game checks for that)
+    Vector2 GenerateRandomPos(const deque<Vector2> &snakeBody)
+    {
+        Vector2 pos = GenerateRandomCell();
+        while (ElementInDeque(pos, snakeBody))
         {
-            for (int x = 0; x < cellCount; x++)
-            {
-                Vector2 cell = {float(x), float(y)};
-                if (!ElementInDeque(cell, snakeBody))
-                {
-                    freeCells.push_back(cell);
-                }
-            }
+            pos = GenerateRandomCell();
         }
-
-        if (freeCells.empty())
-            return false;
-
-        position = freeCells[GetRandomValue(0, int(freeCells.size()) - 1)];
-        return true;
+        return pos;
     }
 };
 
 // ---------- Game ----------
-enum class State
+enum GameState
 {
-    Start,
-    Running,
-    Paused,
-    GameOver,
-    Won
+    STATE_START,
+    STATE_RUNNING,
+    STATE_PAUSED,
+    STATE_GAMEOVER,
+    STATE_WON
 };
 
 class Game
@@ -181,7 +171,7 @@ class Game
 public:
     Snake snake;
     Food food{snake.body};
-    State state = State::Start;
+    GameState state = STATE_START;
     int score = 0;
     int highScore = 0;
     Sound eatSound;
@@ -202,13 +192,15 @@ public:
         CloseAudioDevice();
     }
 
-    Game(const Game &) = delete;
-    Game &operator=(const Game &) = delete;
-
-    // Time between snake moves; gets faster as the score rises.
-    double GetInterval() const
+    // Time between snake moves; gets faster as the score rises
+    double GetInterval()
     {
-        return std::max(0.05, 0.2 - score * 0.005);
+        double interval = 0.2 - score * 0.005;
+        if (interval < 0.05)
+        {
+            interval = 0.05;
+        }
+        return interval;
     }
 
     void HandleInput()
@@ -225,40 +217,37 @@ public:
 
         bool hasDirection = (dir.x != 0 || dir.y != 0);
 
-        switch (state)
+        if (state == STATE_START)
         {
-        case State::Start:
             if (hasDirection || IsKeyPressed(KEY_SPACE))
             {
                 if (hasDirection)
                     snake.QueueDirection(dir);
                 StartRunning();
             }
-            break;
-
-        case State::Running:
+        }
+        else if (state == STATE_RUNNING)
+        {
             if (hasDirection)
                 snake.QueueDirection(dir);
             if (IsKeyPressed(KEY_P) || IsKeyPressed(KEY_SPACE))
-                state = State::Paused;
-            break;
-
-        case State::Paused:
+                state = STATE_PAUSED;
+        }
+        else if (state == STATE_PAUSED)
+        {
             if (IsKeyPressed(KEY_P) || IsKeyPressed(KEY_SPACE))
                 StartRunning();
-            break;
-
-        case State::GameOver:
-        case State::Won:
+        }
+        else // game over or won
+        {
             if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
                 Reset();
-            break;
         }
     }
 
     void Update()
     {
-        if (state != State::Running)
+        if (state != STATE_RUNNING)
             return;
 
         if (!eventTriggered(GetInterval()))
@@ -277,49 +266,50 @@ public:
         DrawOverlay();
     }
 
-private:
     void StartRunning()
     {
-        state = State::Running;
+        state = STATE_RUNNING;
         lastUpdateTime = GetTime(); // avoid an instant first move
     }
 
     void Reset()
     {
         snake.Reset();
-        food.GenerateRandomPos(snake.body);
+        food.position = food.GenerateRandomPos(snake.body);
         score = 0;
-        lastUpdateTime = GetTime();
-        state = State::Start;
+        state = STATE_START;
     }
 
     void CheckCollisionWithFood()
     {
-        if (!Vector2Equals(snake.body[0], food.position))
-            return;
-
-        snake.addSegment = true;
-        score++;
-        PlaySound(eatSound);
-
-        // The snake grows by one on the next move; if that fills the board, you win.
-        if (snake.body.size() + 1 >= size_t(cellCount) * cellCount)
+        if (Vector2Equals(snake.body[0], food.position))
         {
-            Win();
-        }
-        else
-        {
-            food.GenerateRandomPos(snake.body);
+            snake.addSegment = true;
+            score++;
+            PlaySound(eatSound);
+
+            // The snake grows by one on the next move; if that fills the board, you win
+            if (snake.body.size() + 1 >= (unsigned int)(cellCount * cellCount))
+            {
+                Win();
+            }
+            else
+            {
+                food.position = food.GenerateRandomPos(snake.body);
+            }
         }
     }
 
     void CheckCollisionWithEdge()
     {
-        if (state != State::Running)
+        if (state != STATE_RUNNING)
             return;
 
-        const Vector2 &head = snake.body[0];
-        if (head.x < 0 || head.x >= cellCount || head.y < 0 || head.y >= cellCount)
+        if (snake.body[0].x >= cellCount || snake.body[0].x < 0)
+        {
+            GameOver();
+        }
+        else if (snake.body[0].y >= cellCount || snake.body[0].y < 0)
         {
             GameOver();
         }
@@ -327,10 +317,10 @@ private:
 
     void CheckCollisionWithSelf()
     {
-        if (state != State::Running)
+        if (state != STATE_RUNNING)
             return;
 
-        for (size_t i = 1; i < snake.body.size(); i++)
+        for (unsigned int i = 1; i < snake.body.size(); i++)
         {
             if (Vector2Equals(snake.body[0], snake.body[i]))
             {
@@ -342,14 +332,14 @@ private:
 
     void GameOver()
     {
-        state = State::GameOver;
+        state = STATE_GAMEOVER;
         UpdateHighScore();
         PlaySound(wallSound);
     }
 
     void Win()
     {
-        state = State::Won;
+        state = STATE_WON;
         UpdateHighScore();
     }
 
@@ -362,54 +352,55 @@ private:
         }
     }
 
+    // High score is stored with raylib's own file functions
     void LoadHighScore()
     {
-        std::ifstream file("highscore.txt");
-        if (file)
+        if (FileExists("highscore.txt"))
         {
-            file >> highScore;
+            char *text = LoadFileText("highscore.txt");
+            if (text != NULL)
+            {
+                highScore = TextToInteger(text);
+                UnloadFileText(text);
+            }
         }
     }
 
-    void SaveHighScore() const
+    void SaveHighScore()
     {
-        std::ofstream file("highscore.txt");
-        if (file)
-        {
-            file << highScore;
-        }
+        SaveFileText("highscore.txt", (char *)TextFormat("%i", highScore));
     }
 
     void DrawOverlay()
     {
-        if (state == State::Running)
+        if (state == STATE_RUNNING)
             return;
 
+        int boardSize = cellSize * cellCount;
         int midY = offset + boardSize / 2;
-        DrawRectangle(offset, midY - 70, boardSize, 140, Fade(lightGreen, 0.85f));
+        DrawRectangle(offset, midY - 70, boardSize, 140, Fade(green, 0.85f));
 
-        switch (state)
+        if (state == STATE_START)
         {
-        case State::Start:
             DrawCentered("Press a direction key to start", midY - 35, 40);
             DrawCentered("WASD / Arrows to move, P to pause", midY + 15, 25);
-            break;
-        case State::Paused:
+        }
+        else if (state == STATE_PAUSED)
+        {
             DrawCentered("Paused", midY - 35, 50);
             DrawCentered("Press P or Space to resume", midY + 25, 25);
-            break;
-        case State::GameOver:
+        }
+        else if (state == STATE_GAMEOVER)
+        {
             DrawCentered("Game Over", midY - 50, 50);
             DrawCentered(TextFormat("Final score: %i", score), midY + 5, 30);
             DrawCentered("Press Space to play again", midY + 40, 25);
-            break;
-        case State::Won:
+        }
+        else if (state == STATE_WON)
+        {
             DrawCentered("You Win!", midY - 50, 50);
             DrawCentered(TextFormat("Final score: %i", score), midY + 5, 30);
             DrawCentered("Press Space to play again", midY + 40, 25);
-            break;
-        default:
-            break;
         }
     }
 };
@@ -417,13 +408,14 @@ private:
 // ---------- Main ----------
 int main()
 {
-    InitWindow(2 * offset + boardSize, 2 * offset + boardSize, "Retro Snake");
+    cout << "Starting the game..." << endl;
+    InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
 
     { // Scope so Game (and its texture/sounds) is destroyed before CloseWindow()
         Game game;
 
-        while (!WindowShouldClose())
+        while (WindowShouldClose() == false)
         {
             // input and logic
             game.HandleInput();
@@ -431,16 +423,13 @@ int main()
 
             // drawing
             BeginDrawing();
-            ClearBackground(lightGreen);
-            DrawRectangleLinesEx(
-                Rectangle{float(offset) - 5, float(offset) - 5,
-                          float(boardSize + 10), float(boardSize + 10)},
-                5, darkGreen);
-            DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
-            DrawText(TextFormat("Score: %i", game.score), offset - 5, offset + boardSize + 10, 40, darkGreen);
+            ClearBackground(green);
+            DrawRectangleLinesEx(Rectangle{float(offset) - 5, float(offset) - 5, float(cellSize * cellCount + 10), float(cellSize * cellCount + 10)}, 5, DarkGreen);
+            DrawText("Retro Snake", offset - 5, 20, 40, DarkGreen);
+            DrawText(TextFormat("Score: %i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, DarkGreen);
 
             const char *best = TextFormat("Best: %i", game.highScore);
-            DrawText(best, offset + boardSize + 5 - MeasureText(best, 40), offset + boardSize + 10, 40, darkGreen);
+            DrawText(best, offset + cellSize * cellCount + 5 - MeasureText(best, 40), offset + cellSize * cellCount + 10, 40, DarkGreen);
 
             game.Draw();
             EndDrawing();
