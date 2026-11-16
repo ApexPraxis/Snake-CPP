@@ -13,9 +13,12 @@ This project was created as part of my journey into C++ programming, object-orie
 - Classic Snake gameplay
 - Object-oriented design using C++ classes
 - Smooth, grid-based movement
-- Food generation at random positions
+- Random food generation
 - Wall and self-collision detection
-- Score tracking
+- Real-time score tracking
+- Persistent high-score system
+- Start, pause, game-over, and win states
+- Increasing difficulty as the score grows
 - Sound effects for eating food and hitting walls
 - Keyboard controls using WASD or arrow keys
 
