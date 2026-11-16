@@ -8,6 +8,16 @@ Snake-CPP is a recreation of the classic Snake arcade game. Control the snake, c
 
 This project was created as part of my journey into C++ programming, object-oriented programming, and game development using raylib..
 
+## 🖼️ Screenshots
+
+### Start Screen
+
+![Snake-CPP Start Screen](interface.png)
+
+### Gameplay
+
+![Snake-CPP Gameplay](gameplay.png)
+
 ## ✨ Features
 
 - Classic Snake gameplay
