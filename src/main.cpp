@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// ---------- Config ----------
 Color green = {173, 204, 96, 255};
 Color DarkGreen = {43, 51, 24, 255};
 
@@ -15,7 +14,6 @@ int offset = 75;
 
 double lastUpdateTime = 0;
 
-// ---------- Helpers ----------
 bool ElementInDeque(const Vector2 &element, const deque<Vector2> &body)
 {
     for (unsigned int i = 0; i < body.size(); i++)
@@ -45,13 +43,12 @@ void DrawCentered(const char *text, int y, int fontSize)
     DrawText(text, (GetScreenWidth() - width) / 2, y, fontSize, DarkGreen);
 }
 
-// ---------- Snake ----------
 class Snake
 {
 public:
     deque<Vector2> body = {Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9}};
-    Vector2 direction = {1, 0};     // direction the snake last moved in
-    deque<Vector2> inputQueue;      // up to 2 buffered turns
+    Vector2 direction = {1, 0};
+    deque<Vector2> inputQueue;
     bool addSegment = false;
 
     void Draw()
@@ -65,7 +62,6 @@ public:
         }
     }
 
-    // Buffers a turn, ignoring reversals and duplicates
     void QueueDirection(Vector2 newDir)
     {
         Vector2 last = inputQueue.empty() ? direction : inputQueue.back();
@@ -73,7 +69,7 @@ public:
         if (Vector2Equals(newDir, last))
             return;
         if (Vector2Equals(Vector2Add(newDir, last), Vector2{0, 0}))
-            return; // 180 degree turn
+            return;
         if (inputQueue.size() < 2)
             inputQueue.push_back(newDir);
     }
@@ -106,7 +102,6 @@ public:
     }
 };
 
-// ---------- Food ----------
 class Food
 {
 public:
@@ -128,7 +123,6 @@ public:
         UnloadTexture(texture);
     }
 
-    // Food owns a texture, so copying it would unload the texture twice
     Food(const Food &) = delete;
     Food &operator=(const Food &) = delete;
 
@@ -144,7 +138,6 @@ public:
         return Vector2{x, y};
     }
 
-    // Only call this when the board is not full (Game checks for that)
     Vector2 GenerateRandomPos(const deque<Vector2> &snakeBody)
     {
         Vector2 pos = GenerateRandomCell();
@@ -156,7 +149,6 @@ public:
     }
 };
 
-// ---------- Game ----------
 enum GameState
 {
     STATE_START,
@@ -192,7 +184,6 @@ public:
         CloseAudioDevice();
     }
 
-    // Time between snake moves; gets faster as the score rises
     double GetInterval()
     {
         double interval = 0.2 - score * 0.005;
@@ -238,7 +229,7 @@ public:
             if (IsKeyPressed(KEY_P) || IsKeyPressed(KEY_SPACE))
                 StartRunning();
         }
-        else // game over or won
+        else
         {
             if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
                 Reset();
@@ -269,7 +260,7 @@ public:
     void StartRunning()
     {
         state = STATE_RUNNING;
-        lastUpdateTime = GetTime(); // avoid an instant first move
+        lastUpdateTime = GetTime();
     }
 
     void Reset()
@@ -288,7 +279,6 @@ public:
             score++;
             PlaySound(eatSound);
 
-            // The snake grows by one on the next move; if that fills the board, you win
             if (snake.body.size() + 1 >= (unsigned int)(cellCount * cellCount))
             {
                 Win();
@@ -352,7 +342,6 @@ public:
         }
     }
 
-    // High score is stored with raylib's own file functions
     void LoadHighScore()
     {
         if (FileExists("highscore.txt"))
@@ -405,23 +394,21 @@ public:
     }
 };
 
-// ---------- Main ----------
 int main()
 {
     cout << "Starting the game..." << endl;
     InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
 
-    { // Scope so Game (and its texture/sounds) is destroyed before CloseWindow()
+    {
         Game game;
 
         while (WindowShouldClose() == false)
         {
-            // input and logic
+
             game.HandleInput();
             game.Update();
 
-            // drawing
             BeginDrawing();
             ClearBackground(green);
             DrawRectangleLinesEx(Rectangle{float(offset) - 5, float(offset) - 5, float(cellSize * cellCount + 10), float(cellSize * cellCount + 10)}, 5, DarkGreen);
