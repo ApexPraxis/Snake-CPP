@@ -112,7 +112,6 @@ Snake-CPP/
 - [ ] Improve animations and visual effects
 - [ ] Introduce CMake support
 - [ ] Add automated build testing with GitHub Actions
-- [ ] Add a gameplay screenshot or GIF to the README
 
 ## 👨‍💻 Author
 
