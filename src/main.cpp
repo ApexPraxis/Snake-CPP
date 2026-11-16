@@ -285,12 +285,13 @@ private:
     }
 
     void Reset()
-    {
-        snake.Reset();
-        food.GenerateRandomPos(snake.body);
-        score = 0;
-        state = State::Start;
-    }
+{
+    snake.Reset();
+    food.GenerateRandomPos(snake.body);
+    score = 0;
+    lastUpdateTime = GetTime();
+    state = State::Start;
+}
 
     void CheckCollisionWithFood()
     {
